@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- =========================
+         META INFORMATION
+    ========================== -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Chess</title>
+
+    <!-- =========================
+         EXTERNAL CSS
+    ========================== -->
+    <link rel="stylesheet" href="chessboard-1.0.0.css">
+
+    <!-- =========================
+         EXTERNAL JAVASCRIPT
+    ========================== -->
+    <script src="jquery.min.js"></script>
+    <script src="chess.min.js"></script>
+    <script src="chessboard-1.0.0.js"></script>
+    <script src="engine.js"></script>
+    <script src="openings-data.js"></script>
+    <script src="openings-book.js"></script>
+
+    <!-- =========================
+         INTERNAL STYLES
+    ========================== -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- ========================================
+         HOME SCREEN
+    ========================================= -->
+
+    <div id="home-screen">
+    <div class="home-icon">♟</div>
+    <h1 class="home-title">CHESS</h1>
+    <p class="home-subtitle">Play & Practice</p>
+
+    <div class="menu-cards">
+        <button class="menu-card" onclick="openTimeControlPicker()">
+            <span class="card-icon">♟</span>
+            <span class="card-label">Play Chess</span>
+            <span class="card-arrow">→</span>
+        </button>
+        <button class="menu-card" onclick="openAnalysis()">
+            <span class="card-icon">♟</span>
+            <span class="card-label">Analysis Board</span>
+            <span class="card-arrow">→</span>
+        </button>
+        <button class="menu-card" onclick="alert('Openings coming soon!')">
+            <span class="card-icon">♟</span>
+            <span class="card-label">Learn Openings</span>
+            <span class="card-arrow">→</span>
+        </button>
+    </div>
+
+    <div class="bottom-nav">
+        <button class="nav-item active">
+            <span class="nav-icon">🏠</span> Home
+        </button>
+        <button class="nav-item" onclick="openTimeControlPicker()">
+            <span class="nav-icon">♟</span> Play
+        </button>
+        <button class="nav-item" onclick="alert('Coming soon!')">
+            <span class="nav-icon">📖</span> Learn
+        </button>
+    </div>
+</div>
+
+<!-- ========================================
+     TIME CONTROL PICKER
+========================================= -->
+
+<div id="timecontrol-screen">
+
+    <div class="pgn-card timecontrol-card">
+
+        <h2>SELECT TIME CONTROL</h2>
+
+        <div class="tc-group-label">Blitz</div>
+        <div class="tc-options">
+            <button class="tc-btn" onclick="startTwoPlayers(3,0)">3 min</button>
+            <button class="tc-btn" onclick="startTwoPlayers(3,2)">3 | 2</button>
+            <button class="tc-btn" onclick="startTwoPlayers(5,0)">5 min</button>
+        </div>
+
+        <div class="tc-group-label">Rapid</div>
+        <div class="tc-options">
+            <button class="tc-btn" onclick="startTwoPlayers(10,0)">10 min</button>
+            <button class="tc-btn" onclick="startTwoPlayers(15,10)">15 | 10</button>
+            <button class="tc-btn" onclick="startTwoPlayers(30,0)">30 min</button>
+        </div>
+
+        <button onclick="startTwoPlayers(null, null)">
+            No Clock
+        </button>
+
+        <button onclick="closeTimeControlPicker()">
+            Back
+        </button>
+
+    </div>
+
+</div>
+    <div id="game-screen">
+
+        <!-- ========================================
+     TWO PLAYER TOP BAR
+========================================= -->
+
+<div class="game-topbar" id="two-player-bar">
+
+    <button class="top-icon-button" onclick="goHome()" aria-label="Back">
+        ‹
+    </button>
+
+    <div class="top-spacer"></div>
+
+    <button class="top-icon-button" onclick="toggleMoreMenu()" aria-label="More">
+        ⋮
+    </button>
+
+</div>
+
+<div class="more-menu" id="more-menu">
+
+    <button class="menu-item-twoplayer" onclick="resetGame(); closeMoreMenu();">
+        New Game
+    </button>
+
+    <button class="menu-item-twoplayer" onclick="exportGame(); closeMoreMenu();">
+        Export PGN
+    </button>
+
+    <button class="menu-item-analysis" onclick="importGame(); closeMoreMenu();">
+        Load New PGN
+    </button>
+
+    <button class="menu-item-analysis" onclick="openSettings(); closeMoreMenu();">
+        Settings
+    </button>
+
+</div>
+
+<!-- ========================================
+     ANALYSIS TOP BAR
+========================================= -->
+
+<div class="game-topbar" id="analysis-bar">
+
+    <button class="top-icon-button" onclick="goHome()" aria-label="Back">
+        ‹
+    </button>
+
+    <div class="top-spacer"></div>
+
+    <button class="top-icon-button" onclick="toggleMoreMenu()" aria-label="More">
+        ⋮
+    </button>
+
+</div>
+
+        <div class="game-area">
+
+    <div id="opening-name" class="opening-name"></div>
+
+    <div class="player player-top">
+        <span class="player-name">PLAYER 2</span>
+        <span class="player-clock" id="clock-top"></span>
+    </div>
+
+    <div class="board-container">
+
+        <div class="board-wrapper">
+            <div id="board"></div>
+        </div>
+
+    </div>
+
+    <div class="player player-bottom">
+        <span class="player-name">PLAYER 1</span>
+        <span class="player-clock" id="clock-bottom"></span>
+    </div>
+
+</div>
+        <div class="game-bottom-controls" id="game-bottom-controls">
+
+    <button onclick="undoMove()">
+        <span class="control-icon">↶</span>
+        <span>Undo</span>
+    </button>
+
+    <button onclick="flipBoard()">
+        <span class="control-icon">⟳</span>
+        <span>Flip</span>
+    </button>
+
+    <button onclick="openSettings()">
+        <span class="control-icon">⚙</span>
+        <span>Settings</span>
+    </button>
+
+    <button onclick="resignGame()">
+        <span class="control-icon">⚑</span>
+        <span>Resign</span>
+    </button>
+
+</div>
+
+            <div class="analysis-controls" id="analysis-controls">
+
+                <button onclick="previousMove()">
+                    ◀ Previous
+                </button>
+
+                <button class="review-game-btn" onclick="reviewGame()">
+                    Review Game
+                </button>
+
+                <button onclick="nextMove()">
+                    Next ▶
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+    </div>
+    <!-- ========================================
+     PGN INPUT SCREEN
+========================================= -->
+
+<div id="pgn-screen">
+
+    <div class="pgn-card">
+
+        <h2>ANALYSIS BOARD</h2>
+
+        <textarea
+            id="pgn-input"
+            placeholder="Paste your PGN here..."
+        ></textarea>
+
+        <button onclick="loadPGN()">
+            Load Game
+        </button>
+
+        <button onclick="openChessComImport()">
+            Load from Chess.com
+        </button>
+
+        <button onclick="closePGNScreen()">
+            Back
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ========================================
+     SETTINGS SCREEN
+========================================= -->
+
+<div id="settings-screen">
+
+    <div class="pgn-card settings-card">
+
+        <h2>SETTINGS</h2>
+
+        <label class="settings-label" for="settings-rating">
+            Your rating
+        </label>
+
+        <input
+            type="number"
+            id="settings-rating"
+            min="100"
+            max="3000"
+            step="50"
+        >
+
+        <p class="settings-help">
+            Used to judge Game Review move classifications
+            (Great / Brilliant / Miss, and how strictly moves are
+            graded) — chess.com holds higher-rated players to a
+            stricter standard, so this tells the reviewer roughly
+            how strong you are.
+        </p>
+
+        <button onclick="saveSettings()">
+            Save
+        </button>
+
+        <button onclick="closeSettingsScreen()">
+            Back
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ========================================
+     CHESS.COM IMPORT SCREEN
+========================================= -->
+
+<div id="chesscom-screen">
+
+    <div class="pgn-card chesscom-card">
+
+        <h2>IMPORT FROM CHESS.COM</h2>
+
+        <input
+            type="text"
+            id="chesscom-username"
+            placeholder="Chess.com username"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false"
+        >
+
+        <input
+            type="month"
+            id="chesscom-month"
+        >
+
+        <button onclick="fetchChessComGames()" id="chesscom-fetch-btn">
+            Find Games
+        </button>
+
+        <div id="chesscom-status"></div>
+
+        <div id="chesscom-game-list"></div>
+
+        <button onclick="closeChessComScreen()">
+            Back
+        </button>
+
+    </div>
+
+</div>
+           <!-- ========================================
+     GAME RESULT SCREEN
+========================================= -->
+
+<div id="game-result-screen">
+
+    <div class="game-result-card">
+
+        <h2 id="game-result-title">
+            Game Over
+        </h2>
+
+        <p id="game-result-message">
+            Game finished.
+        </p>
+
+        <button onclick="reviewGame()">
+            Review Game
+        </button>
+
+        <button onclick="newGameFromResult()">
+            New Game
+        </button>
+
+    </div>
+
+</div>
+          <!-- ========================================
+     GAME REVIEW SUMMARY SCREEN
+     (accuracy + move-breakdown, shown right after
+     "Review Game" is tapped — chess.com's summary
+     step before the move-by-move board opens)
+========================================= -->
+
+<div id="game-review-summary-screen">
+
+    <div id="review-loading" class="review-loading">
+
+        <div class="review-loading-spinner"></div>
+
+        <p id="review-loading-text">Analyzing with Stockfish...</p>
+
+        <div class="review-progress-track">
+            <div class="review-progress-fill" id="review-progress-fill"></div>
+        </div>
+
+    </div>
+
+    <div class="game-review-card">
+
+        <h2>GAME REVIEW</h2>
+
+        <div class="review-summary">
+
+            <h3>Game Summary</h3>
+
+            <p id="review-result">
+                Game finished
+            </p>
+
+        </div>
+
+        <div class="review-section">
+
+            <h3>Accuracy</h3>
+
+            <div class="accuracy-row">
+
+                <div>
+                    <span>White</span>
+                    <strong id="white-accuracy">—</strong>
+                </div>
+
+                <div>
+                    <span>Black</span>
+                    <strong id="black-accuracy">—</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="review-section">
+
+            <h3>Move Breakdown</h3>
+
+            <div class="breakdown-header">
+                <span></span>
+                <span>White</span>
+                <span></span>
+                <span>Black</span>
+            </div>
+
+            <div id="breakdown-rows"></div>
+
+        </div>
+
+        <button
+            class="review-start-button"
+            id="review-start-btn"
+            onclick="startReviewBoard()"
+            disabled
+        >
+            Start Review
+        </button>
+
+        <button
+            class="review-back-button"
+            onclick="closeGameReviewSummary()"
+        >
+            ← Back
+        </button>
+
+    </div>
+
+</div>
+
+<!-- ========================================
+     GAME REVIEW BOARD SCREEN
+     (move-by-move board with eval bar, opened
+     from the summary screen's "Start Review")
+========================================= -->
+
+<div id="game-review-board-screen">
+
+    <div class="game-review-card">
+
+        <h2>GAME REVIEW</h2>
+
+        <div class="review-section move-analysis-bar">
+
+            <p id="move-analysis">
+                Stockfish analysis will be added next.
+            </p>
+
+        </div>
+
+<div class="review-board-wrapper">
+
+    <div class="eval-bar">
+        <div class="eval-bar-fill" id="eval-bar-fill"></div>
+    </div>
+
+    <div id="review-board"></div>
+
+</div>
+
+<div class="review-bottom-controls">
+
+    <button onclick="resetReviewBoardToStart()">
+        <span class="control-icon">↶</span>
+        <span>Undo</span>
+    </button>
+
+    <button onclick="flipReviewBoard()">
+        <span class="control-icon">⟳</span>
+        <span>Flip</span>
+    </button>
+
+    <button onclick="openSettings()">
+        <span class="control-icon">⚙</span>
+        <span>Settings</span>
+    </button>
+
+</div>
+
+<div class="review-move-controls">
+
+    <button onclick="reviewPreviousMove()">
+        ◀ Previous
+    </button>
+
+    <span id="review-move-number">
+        Start
+    </span>
+
+    <button onclick="reviewNextMove()">
+        Next ▶
+    </button>
+
+</div>
+
+        <div class="review-section">
+
+    <h3>Moves</h3>
+
+    <div id="review-moves">
+        No moves yet.
+    </div>
+
+</div>
+
+        <button
+            class="review-back-button"
+            onclick="closeGameReview()"
+        >
+            ← Back
+        </button>
+
+    </div>
+
+</div>
+
+    <!-- ========================================
+         PROMOTION POPUP
+    ========================================= -->
+
+    <div id="promotion-popup">
+
+        <div class="promotion-box">
+
+            <img id="promo-q" src="wQ.png" onclick="selectPromotion('q')">
+            <img id="promo-r" src="wR.png" onclick="selectPromotion('r')">
+            <img id="promo-b" src="wB.png" onclick="selectPromotion('b')">
+            <img id="promo-n" src="wN.png" onclick="selectPromotion('n')">
+
+        </div>
+
+    </div>
+
+    <!-- ========================================
+         JAVASCRIPT
+    ========================================= -->
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>

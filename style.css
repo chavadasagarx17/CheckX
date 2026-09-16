@@ -1,0 +1,1743 @@
+
+        /* ========================================
+           GLOBAL STYLES
+        ======================================== */
+
+        body {
+    margin: 0;
+    background: #1a1a1a;
+    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;   /* changed from 'center' */
+    min-height: 100vh;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+        button:hover {
+            transform: scale(1.03);
+        }
+
+        
+
+        /* ========================================
+           HOME SCREEN – CHESS.COM STYLE
+           ======================================== */
+    #home-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;                 /* takes all remaining height */
+    width: 100%;
+    max-width: 520px;        /* match your app width */
+    padding-bottom: 0;
+}
+
+.home-icon {
+    font-size: 48px;
+    margin-top: 10px;
+    margin-bottom: 2px;
+    color: #81b64c;
+    text-shadow: 0 0 12px rgba(129, 182, 76, 0.3);
+}
+
+.home-title {
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: #f0f0f0;
+    margin: 0;
+}
+.home-title span {
+    color: #81b64c;
+}
+
+.home-subtitle {
+    font-size: 15px;
+    color: #aaa;
+    margin-top: 0;
+    margin-bottom: 28px;
+    letter-spacing: 0.3px;
+}
+
+.menu-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 360px;
+}
+
+.menu-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    background: #262626;
+    border: 1px solid #3a3a3a;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.2s ease;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+}
+.menu-card:hover {
+    background: #333;
+    border-color: #81b64c;
+    transform: scale(1.01);
+    box-shadow: 0 4px 16px rgba(129, 182, 76, 0.15);
+}
+.menu-card .card-icon {
+    font-size: 22px;
+    min-width: 32px;
+    color: #81b64c;
+}
+.menu-card .card-label {
+    flex: 1;
+    color: #eee;
+}
+.menu-card .card-arrow {
+    color: #666;
+    font-size: 18px;
+    transition: 0.2s;
+}
+.menu-card:hover .card-arrow {
+    color: #81b64c;
+    transform: translateX(4px);
+}
+
+.bottom-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: auto;           /* pushes nav to the bottom of #home-screen */
+    padding-top: 14px;
+    padding-bottom: 6px;
+    border-top: 1px solid #2a2a2a;
+    width: 100%;
+    background: #1a1a1a;        /* blend with body */
+}
+
+.nav-item {
+    background: transparent;
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 8px 14px;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+    border: none;
+}
+.nav-item:hover {
+    color: #fff;
+    background: #2a2a2a;
+}
+.nav-item.active {
+    color: #81b64c;
+    background: rgba(129, 182, 76, 0.12);
+}
+.nav-item .nav-icon {
+    font-size: 18px;
+}
+
+
+        #menu {
+            margin: 10px;
+        }
+
+        /* ========================================
+           GAME SCREEN
+        ======================================== */
+
+        #game-screen {
+            display: none;
+            padding: 15px;
+        }
+
+        .board-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .board-wrapper {
+            padding: 10px;
+            border-radius: 16px;
+            background: #262421;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+        }
+
+        #board {
+            width: 90vmin;
+            max-width: 500px;
+        }
+
+        /* ========================================
+           CHESS MOVE EFFECTS
+        ======================================== */
+
+        .square-55d63 {
+            position: relative;
+        }
+
+        .dot {
+            position: relative;
+            top: 40%;
+            width: 22%;
+            height: 22%;
+            margin: auto;
+            border-radius: 50%;
+            background: rgba(0, 255, 0, 0.45);
+            pointer-events: none;
+        }
+
+        .capture-ring {
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            border: 6px solid rgba(0, 0, 0, 0.25);
+            border-radius: 50%;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+
+        .check-square {
+            background: rgba(255, 0, 0, 0.5) !important;
+        }
+
+        .last-move {
+            box-shadow: inset 0 0 0 9999px rgba(255, 255, 0, 0.35);
+        }
+
+        .square-55d63.selected-piece {
+            box-shadow: inset 0 0 0 9999px rgba(0, 255, 255, 0.9);
+        }
+
+        /* ========================================
+           PROMOTION POPUP
+        ======================================== */
+
+        #promotion-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+
+            width: 100%;
+            height: 100%;
+
+            display: none;
+            justify-content: center;
+            align-items: center;
+
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .promotion-box {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+            border-radius: 10px;
+            background: #2a2a2a;
+        }
+
+        .promotion-box img {
+            width: 50px;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+
+        .promotion-box img:hover {
+            transform: scale(1.08);
+        }
+
+        /* ========================================
+   PGN SCREEN
+======================================== */
+
+#pgn-screen {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,0.7);
+
+    z-index: 9999;
+}
+
+.pgn-card {
+
+    width: 85%;
+    max-width: 420px;
+
+    background: #262421;
+
+    padding: 25px;
+
+    border-radius: 20px;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+.pgn-card h2 {
+
+    text-align: center;
+    margin: 0;
+
+    color: #81b64c;
+}
+
+#pgn-input {
+
+    height: 180px;
+
+    resize: none;
+
+    border: none;
+
+    outline: none;
+
+    border-radius: 12px;
+
+    padding: 15px;
+
+    font-size: 15px;
+
+    background: #3c3a37;
+
+    color: white;
+}
+
+.pgn-card button {
+
+    padding: 14px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #81b64c;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.pgn-card button:hover {
+
+    transform: scale(1.03);
+}
+
+/* ========================================
+   CHESS.COM IMPORT
+======================================== */
+
+#chesscom-screen {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,0.7);
+
+    z-index: 9999;
+}
+
+.chesscom-card {
+
+    max-width: 460px;
+    max-height: 85vh;
+
+    overflow-y: auto;
+}
+
+/* ========================================
+   SETTINGS SCREEN
+======================================== */
+
+#settings-screen {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,0.7);
+
+    z-index: 9999;
+}
+
+.settings-card {
+
+    max-width: 420px;
+}
+
+.settings-label {
+
+    color: #9c9992;
+
+    font-size: 12.5px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: .6px;
+
+    margin-bottom: -8px;
+}
+
+#settings-rating {
+
+    border: none;
+    outline: none;
+
+    border-radius: 12px;
+
+    padding: 13px 15px;
+
+    font-size: 15px;
+
+    background: #3c3a37;
+
+    color: white;
+
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+.settings-help {
+
+    font-size: 12.5px;
+    line-height: 1.5;
+
+    color: #9c9992;
+
+    margin: -6px 0 0;
+}
+
+#chesscom-username,
+#chesscom-month {
+
+    border: none;
+    outline: none;
+
+    border-radius: 12px;
+
+    padding: 13px 15px;
+
+    font-size: 15px;
+
+    background: #3c3a37;
+
+    color: white;
+
+    width: 100%;
+
+    box-sizing: border-box;
+}
+
+#chesscom-month {
+
+    color-scheme: dark;
+}
+
+#chesscom-status {
+
+    font-size: 13.5px;
+
+    color: #b9b6b1;
+
+    text-align: center;
+
+    min-height: 1em;
+}
+
+#chesscom-status.chesscom-error {
+
+    color: #d91c25;
+}
+
+#chesscom-game-list {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    max-height: 320px;
+
+    overflow-y: auto;
+}
+
+.chesscom-game-row {
+
+    display: flex;
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding: 12px 14px;
+
+    border-radius: 12px;
+
+    background: #3c3a37;
+
+    cursor: pointer;
+
+    transition: 0.15s;
+}
+
+.chesscom-game-row:hover {
+
+    background: #48453f;
+}
+
+.chesscom-game-opponent {
+
+    font-weight: 600;
+
+    font-size: 14.5px;
+
+    color: #f2f2f2;
+}
+
+.chesscom-game-meta {
+
+    font-size: 12px;
+
+    color: #9c9992;
+
+    margin-top: 2px;
+}
+
+.chesscom-game-result {
+
+    font-weight: 700;
+
+    font-size: 13px;
+
+    padding: 4px 10px;
+
+    border-radius: 8px;
+
+    white-space: nowrap;
+}
+
+.chesscom-result-win {
+    color: #8cbe31;
+    background: rgba(140,190,49,0.15);
+}
+
+.chesscom-result-loss {
+    color: #d91c25;
+    background: rgba(217,28,37,0.15);
+}
+
+.chesscom-result-draw {
+    color: #b9b6b1;
+    background: rgba(185,182,177,0.15);
+}
+
+/* ========================================
+   TIME CONTROL PICKER
+======================================== */
+
+#timecontrol-screen {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,0.7);
+
+    z-index: 9999;
+}
+
+.timecontrol-card {
+
+    max-width: 420px;
+}
+
+.tc-group-label {
+
+    color: #9c9992;
+
+    font-size: 12.5px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: .6px;
+
+    margin-bottom: -6px;
+}
+
+.tc-options {
+
+    display: flex;
+
+    gap: 10px;
+}
+
+.timecontrol-card button.tc-btn {
+
+    flex: 1;
+
+    padding: 14px 8px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #3c3a37;
+
+    color: white;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.timecontrol-card button.tc-btn:hover {
+
+    background: #48453f;
+
+    transform: scale(1.03);
+}
+
+    #two-player-bar,
+#analysis-bar {
+
+    display: none;
+}
+    .analysis-controls {
+
+    display: none;
+
+    margin-top: 18px;
+
+    justify-content: center;
+
+    gap: 14px;
+}
+
+.analysis-controls button {
+
+    padding: 14px 20px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #3c3a37;
+
+    color: white;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.analysis-controls button.review-game-btn {
+
+    background: #81b64c;
+
+    flex: 1.3;
+}
+    /* ========================================
+   GAME RESULT SCREEN
+======================================== */
+
+#game-result-screen {
+
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    justify-content: center;
+    align-items: center;
+
+    background: rgba(0,0,0,0.75);
+
+    z-index: 10000;
+}
+
+.game-result-card {
+
+    width: 85%;
+    max-width: 380px;
+
+    background: #262421;
+
+    padding: 30px;
+
+    border-radius: 20px;
+
+    text-align: center;
+
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.game-result-card h2 {
+
+    color: #81b64c;
+
+    font-size: 30px;
+
+    margin-bottom: 15px;
+}
+
+.game-result-card p {
+
+    color: #d7d7d7;
+
+    font-size: 18px;
+
+    margin-bottom: 25px;
+}
+
+.game-result-card button {
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 10px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #81b64c;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+    /* ========================================
+   GAME REVIEW SCREEN
+======================================== */
+
+#game-review-summary-screen,
+#game-review-board-screen {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    justify-content: center;
+
+    align-items: flex-start;
+
+    overflow-y: auto;
+
+    background: #302e2b;
+
+    z-index: 11000;
+
+    padding: 25px;
+
+    box-sizing: border-box;
+}
+
+.game-review-card {
+
+    width: 100%;
+
+    max-width: 500px;
+
+    background: #262421;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-sizing: border-box;
+
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+}
+
+.game-review-card h2 {
+
+    text-align: center;
+
+    color: #81b64c;
+
+    margin-top: 0;
+
+    margin-bottom: 25px;
+}
+
+/* ---------- Move analysis bar (top, above board) ---------- */
+
+.move-analysis-bar {
+
+    margin-bottom: 14px;
+
+    border-left: 4px solid #81b64c;
+}
+
+.move-analysis-bar p {
+
+    font-size: 15px;
+
+    line-height: 1.4;
+}
+
+.review-section,
+.review-summary {
+
+    background: #3c3a37;
+
+    border-radius: 14px;
+
+    padding: 16px;
+
+    margin-bottom: 14px;
+}
+
+.review-section h3,
+.review-summary h3 {
+
+    margin-top: 0;
+
+    margin-bottom: 10px;
+
+    color: white;
+
+    font-size: 18px;
+}
+
+.review-section p,
+.review-summary p {
+
+    margin: 0;
+
+    color: #d7d7d7;
+
+    font-size: 15px;
+}
+
+.accuracy-row {
+
+    display: flex;
+
+    justify-content: space-around;
+
+    text-align: center;
+}
+
+.accuracy-row div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.accuracy-row span {
+
+    color: #aaa;
+
+    font-size: 14px;
+}
+
+.accuracy-row strong {
+
+    color: #81b64c;
+
+    font-size: 24px;
+}
+
+/* ---------- Move breakdown table ---------- */
+
+.breakdown-header {
+
+    display: grid;
+
+    grid-template-columns: 1fr 40px 30px 40px;
+
+    align-items: center;
+
+    padding: 4px 6px;
+
+    color: #888;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.3px;
+}
+
+.breakdown-header span:nth-child(2),
+.breakdown-header span:nth-child(4) {
+
+    text-align: center;
+}
+
+#breakdown-rows {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+}
+
+.breakdown-row {
+
+    display: grid;
+
+    grid-template-columns: 1fr 40px 30px 40px;
+
+    align-items: center;
+
+    padding: 8px 6px;
+
+    border-radius: 8px;
+
+    background: #262421;
+}
+
+.breakdown-label {
+
+    color: #d7d7d7;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.breakdown-count {
+
+    text-align: center;
+
+    font-size: 15px;
+
+    font-weight: 800;
+}
+
+.breakdown-icon {
+
+    justify-self: center;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    width: 24px;
+
+    height: 24px;
+
+    border-radius: 50%;
+
+    color: #fff;
+
+    font-size: 12px;
+
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+.breakdown-icon svg {
+
+    display: block;
+
+}
+    #review-moves {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+
+    max-height: 300px;
+
+    overflow-y: auto;
+}
+
+.review-move-row {
+
+    display: flex;
+
+    padding: 8px 10px;
+
+    border-radius: 8px;
+
+    background: #262421;
+
+    color: #d7d7d7;
+
+    font-size: 14px;
+}
+
+.review-move-number {
+
+    width: 45px;
+
+    color: #888;
+
+}
+
+.review-white-move,
+.review-black-move {
+
+    flex: 1;
+
+    color: white;
+
+}
+.review-board-wrapper {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: stretch;
+
+    gap: 8px;
+
+    margin-bottom: 15px;
+
+}
+
+#review-board {
+
+    width: 90vmin;
+
+    max-width: 450px;
+
+    position: relative;
+
+}
+
+/* ---------- Evaluation bar ---------- */
+
+.eval-bar {
+
+    width: 16px;
+
+    max-width: 16px;
+
+    border-radius: 8px;
+
+    background: #262421;
+
+    overflow: hidden;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: flex-end;
+}
+
+.eval-bar-fill {
+
+    width: 100%;
+
+    height: 50%;
+
+    background: #f2f2f2;
+
+    transition: height 0.3s ease;
+}
+
+/* ---------- Move classification badges ---------- */
+
+.move-class-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 16px;
+
+    height: 16px;
+
+    padding: 0 3px;
+
+    margin-left: 5px;
+
+    border-radius: 5px;
+
+    font-size: 10px;
+
+    line-height: 1;
+
+    color: #fff;
+
+    font-weight: 800;
+
+    vertical-align: middle;
+}
+
+.move-class-badge svg {
+
+    display: block;
+
+}
+
+/* ---------- On-board move classification badge ---------- */
+
+.board-move-badge {
+
+    position: absolute;
+
+    top: 2px;
+
+    right: 2px;
+
+    width: 20px;
+
+    height: 20px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 11px;
+
+    line-height: 1;
+
+    color: #fff;
+
+    font-weight: 800;
+
+    box-shadow: 0 1px 4px rgba(0,0,0,0.45);
+
+    pointer-events: none;
+
+    z-index: 5;
+}
+
+.board-move-badge svg {
+
+    display: block;
+
+}
+
+/* ---------- Analysis loading overlay ---------- */
+
+.review-loading {
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 16px;
+
+    background: rgba(26, 26, 26, 0.9);
+
+    z-index: 12000;
+
+    padding: 30px;
+
+    box-sizing: border-box;
+
+    text-align: center;
+}
+
+.review-loading-spinner {
+
+    width: 48px;
+    height: 48px;
+
+    border: 5px solid #3c3a37;
+
+    border-top-color: #81b64c;
+
+    border-radius: 50%;
+
+    animation: review-spin 0.9s linear infinite;
+}
+
+@keyframes review-spin {
+
+    from { transform: rotate(0deg); }
+
+    to { transform: rotate(360deg); }
+
+}
+
+#review-loading-text {
+
+    color: #d7d7d7;
+
+    font-size: 15px;
+
+    margin: 0;
+}
+
+.review-progress-track {
+
+    width: 220px;
+
+    height: 8px;
+
+    border-radius: 6px;
+
+    background: #3c3a37;
+
+    overflow: hidden;
+}
+
+.review-progress-fill {
+
+    height: 100%;
+
+    width: 0%;
+
+    background: #81b64c;
+
+    transition: width 0.2s ease;
+}
+
+.review-move-controls {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+
+}
+
+.review-move-controls button {
+
+    flex: 1;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #3c3a37;
+
+    color: white;
+
+    font-size: 14px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+#review-move-number {
+
+    min-width: 70px;
+
+    text-align: center;
+
+    color: #d7d7d7;
+
+    font-size: 14px;
+
+}
+.review-start-button {
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 10px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #81b64c;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.review-start-button:disabled {
+
+    background: #4b4a47;
+
+    color: #9a9a9a;
+
+    cursor: not-allowed;
+}
+
+.review-back-button {
+
+    width: 100%;
+
+    padding: 15px;
+
+    margin-top: 10px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #3c3a37;
+
+    color: #d7d7d7;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+}
+    /* =========================================================
+   FINAL CHESS GAME UI
+========================================================= */
+
+.game-topbar {
+    width: 100%;
+    max-width: 520px;
+    height: 48px;
+    margin: 0 auto 8px;
+
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+}
+
+.top-icon-button {
+    width: 44px;
+    height: 44px;
+
+    padding: 0;
+    border: none;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: transparent;
+    color: #f2f2f2;
+
+    font-size: 32px;
+    line-height: 1;
+
+    cursor: pointer;
+}
+
+.top-icon-button:hover {
+    background: rgba(255,255,255,.07);
+    transform: none;
+}
+
+.top-icon-button:active {
+    transform: scale(.92);
+}
+
+.top-spacer {
+    flex: 1;
+}
+
+
+/* ---------- More menu ---------- */
+
+.more-menu {
+    display: none;
+
+    position: absolute;
+    top: 58px;
+    right: 12px;
+
+    width: 180px;
+
+    padding: 6px;
+
+    border-radius: 12px;
+
+    background: #312f2c;
+    border: 1px solid rgba(255,255,255,.08);
+
+    box-shadow: 0 12px 30px rgba(0,0,0,.45);
+
+    z-index: 100;
+}
+
+.more-menu button {
+    width: 100%;
+
+    padding: 12px 14px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: transparent;
+    color: #f2f2f2;
+
+    text-align: left;
+    font-size: 14px;
+}
+
+.more-menu button:hover {
+    background: #403e3b;
+    transform: none;
+}
+
+
+/* ---------- Game area ---------- */
+
+.game-area {
+    width: 100%;
+    max-width: 520px;
+
+    margin: 0 auto;
+}
+
+
+/* ---------- Players ---------- */
+
+.player {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    box-sizing: border-box;
+}
+
+.player-top {
+    height: 42px;
+    justify-content: space-between;
+}
+
+.player-bottom {
+    height: 42px;
+    justify-content: space-between;
+}
+
+.player-name {
+    color: #f2f2f2;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    letter-spacing: .4px;
+}
+
+.player-clock {
+
+    display: none; /* shown via JS only when a clock is active */
+
+    min-width: 64px;
+
+    padding: 6px 12px;
+
+    border-radius: 8px;
+
+    background: #3c3a37;
+
+    color: #d8d5d0;
+
+    font-size: 17px;
+    font-weight: 700;
+
+    font-variant-numeric: tabular-nums;
+
+    text-align: center;
+
+    letter-spacing: .3px;
+}
+
+.player-clock.clock-active {
+
+    background: #f2f2f2;
+
+    color: #1a1917;
+}
+
+.player-clock.clock-low {
+
+    background: #d91c25;
+
+    color: #fff;
+}
+
+.player-clock.clock-active.clock-low {
+
+    background: #ff4b4b;
+
+    color: #fff;
+}
+
+.opening-name {
+    width: 100%;
+
+    display: none;
+
+    box-sizing: border-box;
+
+    padding: 2px 2px 6px;
+
+    color: #b58863;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    letter-spacing: .3px;
+
+    text-align: left;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* ---------- Board ---------- */
+
+.board-container {
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+
+    margin: 0;
+}
+
+.board-wrapper {
+    padding: 5px;
+
+    border-radius: 12px;
+
+    background: #201f1c;
+
+    box-shadow:
+        0 10px 28px rgba(0,0,0,.4),
+        0 2px 6px rgba(0,0,0,.3);
+}
+
+#board {
+    width: min(94vw, 520px);
+    max-width: 520px;
+
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+
+/* ---------- Bottom controls ---------- */
+
+.game-bottom-controls,
+.review-bottom-controls {
+    width: 100%;
+    max-width: 520px;
+
+    margin: 8px auto 0;
+
+    display: grid;
+
+    gap: 6px;
+}
+
+.game-bottom-controls {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.review-bottom-controls {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.game-bottom-controls button,
+.review-bottom-controls button {
+    min-height: 62px;
+
+    padding: 6px 2px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: transparent;
+    color: #b8b8b8;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 4px;
+
+    font-size: 11px;
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+.game-bottom-controls button:hover,
+.review-bottom-controls button:hover {
+    background: rgba(255,255,255,.06);
+    color: #ffffff;
+
+    transform: none;
+}
+
+.game-bottom-controls button:active,
+.review-bottom-controls button:active {
+    transform: scale(.94);
+}
+
+.control-icon {
+    font-size: 23px;
+    line-height: 1;
+
+    color: #d7d7d7;
+}
+
+
+/* ---------- Resign ---------- */
+
+.game-bottom-controls button:last-child {
+    color: #d7d7d7;
+}
+
+.game-bottom-controls button:last-child .control-icon {
+    color: #d7d7d7;
+}
+
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 420px) {
+
+    #game-screen {
+        padding: 6px 8px 18px;
+    }
+
+    .game-topbar {
+        height: 46px;
+    }
+
+    .player-top,
+    .player-bottom {
+        height: 38px;
+    }
+
+    .player-name {
+        font-size: 14px;
+    }
+
+    #board {
+        width: 94vw;
+    }
+
+    .game-bottom-controls button,
+    .review-bottom-controls button {
+        min-height: 58px;
+    }
+}
